@@ -10,8 +10,8 @@ const challengeInputUrl = String(process.argv[2]);
 const challengeSubmitUrl = String(process.argv[3]);
 
 const runSolver = async () => {
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
+  // const __filename = fileURLToPath(import.meta.url);
+  // const __dirname = path.dirname(__filename);
   const challengePath = path.join(
     __dirname,
     "challenges",
