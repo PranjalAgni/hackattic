@@ -1,0 +1,7 @@
+{
+  "watch": ["challenges"],
+  "ext": "ts, js",
+  "execMap": {
+    "ts": "tsc && node ./dist/index.js"
+  }
+}
