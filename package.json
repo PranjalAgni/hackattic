@@ -2,11 +2,10 @@
   "name": "hackattic",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "index.ts",
   "type": "commonjs",
   "scripts": {
-    "prestart": "tsc",
-    "start": "cross-env DEBUG=hackattic* nodemon"
+    "start": "cross-env DEBUG=hackattic* ts-node index.ts"
   },
   "keywords": [],
   "author": "",
