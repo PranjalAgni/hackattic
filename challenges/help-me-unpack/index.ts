@@ -4,8 +4,10 @@ import fetch from "node-fetch";
 const logger = debug("hackattic:help-me-unpack");
 
 export const solver = async (problemUrl: string, submissionUrl: string) => {
-  await fetchInput(problemUrl);
-  console.log("Solve this now");
+  const data = await fetchInput(problemUrl);
+  if (!data) return;
+  const { bytes } = data;
+  console.log("Extract asked values from base64 bytes", bytes);
 };
 
 const fetchInput = async (problemUrl: string) => {
@@ -13,7 +15,9 @@ const fetchInput = async (problemUrl: string) => {
     const response = await fetch(problemUrl);
     const data = await response.json();
     logger("%O", data);
+    return data;
   } catch (error) {
     logger(error);
   }
+  return null;
 };
