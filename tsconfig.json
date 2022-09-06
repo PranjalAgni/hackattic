@@ -9,9 +9,10 @@
     "sourceMap": true,
     "outDir": "dist",
     "baseUrl": ".",
+    "strictNullChecks": true,
     "paths": {
       "*": ["node_modules/*", "challenges/types/*"]
     }
   },
-  "include": ["challenges/**/*", "index.ts"]
+  "include": ["challenges/**/*", "*.ts"]
 }

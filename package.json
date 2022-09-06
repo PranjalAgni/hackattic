@@ -5,7 +5,8 @@
   "main": "index.ts",
   "type": "commonjs",
   "scripts": {
-    "start": "cross-env DEBUG=hackattic* ts-node index.ts"
+    "start": "cross-env DEBUG=hackattic* ts-node index.ts",
+    "test": "ts-node test.ts"
   },
   "keywords": [],
   "author": "",
@@ -23,7 +24,9 @@
     "typescript": "^4.7.4"
   },
   "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.36.2",
     "debug": "^4.3.4",
+    "eslint-config-standard-with-typescript": "^22.0.0",
     "node-fetch": "^2.6.7"
   }
 }
