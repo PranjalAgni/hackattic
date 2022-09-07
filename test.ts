@@ -10,11 +10,8 @@ const sleep = async (delay: number) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const main = async () => {
-  console.log("Started running");
-  const something = sleep(2000);
-  console.log(something);
-  console.log("Done");
+const main = () => {
+  return sleep(2000);
 };
 
 main();
