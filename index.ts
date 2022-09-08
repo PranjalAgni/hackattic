@@ -3,12 +3,11 @@ import debug from "debug";
 
 const logger = debug("hackattic:root");
 
-console.log(JSON.stringify(process.argv));
 const challengeName = String(process.argv[2]);
 const challengeInputUrl = String(process.argv[3]);
 const challengeSubmitUrl = String(process.argv[4]);
 
-const runSolver = async () => {
+const runSolver = async (): Promise<void> => {
   const challengePath = path.join(__dirname, "challenges", challengeName);
   let challengeInstance = null;
   try {
@@ -21,4 +20,6 @@ const runSolver = async () => {
   await challengeInstance.solver(challengeInputUrl, challengeSubmitUrl);
 };
 
-runSolver();
+await (async function () {
+  await runSolver();
+})();
