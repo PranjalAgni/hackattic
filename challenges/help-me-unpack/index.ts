@@ -18,7 +18,7 @@ const fetchInput = async (problemUrl: string): Promise<IBytes | null> => {
   try {
     const response = await fetch(problemUrl);
     const data = await response.json();
-    logger("%O", data);
+    logger("%O", data.toString());
     return data;
   } catch (error) {
     logger(error);
