@@ -6,7 +6,8 @@
   "type": "commonjs",
   "scripts": {
     "start": "cross-env DEBUG=hackattic* ts-node index.ts",
-    "test": "ts-node test.ts"
+    "test": "ts-node test.ts",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
