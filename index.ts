@@ -20,6 +20,6 @@ const runSolver = async (): Promise<void> => {
   await challengeInstance.solver(challengeInputUrl, challengeSubmitUrl);
 };
 
-await (async function () {
+(async function () {
   await runSolver();
 })();
