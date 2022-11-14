@@ -1,19 +1,18 @@
-import express, { Request, Response } from "express";
+import tftp from "tftp";
+import path from "path";
 import debug from "debug";
-import { fileDB } from "./db";
 
 const logger = debug("hackattic:trivial-filing");
+const dataDirectory = path.join(__dirname, "data");
 
+// This is simple tftp server which handles the GET/PUT of files
 export const initServer = (port: number) => {
-  const app = express();
-  app.use(express.json());
-
-  app.get("/", (req: Request, res: Response) => {
-    logger(`Request body ${JSON.stringify(req.body)}`);
-    return res.json(fileDB);
+  const tftpServer = tftp.createServer({
+    host: "0.0.0.0",
+    port,
+    root: dataDirectory
   });
 
-  app.listen(port, () => {
-    logger(`Server running on http://localhost:${port}`);
-  });
+  tftpServer.listen();
+  logger("Started tftp server");
 };
