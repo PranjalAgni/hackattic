@@ -29,6 +29,7 @@
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^5.36.2",
     "debug": "^4.3.4",
+    "dotenv": "^16.0.3",
     "eslint-config-standard-with-typescript": "^22.0.0",
     "http-proxy-agent": "^5.0.0",
     "https-proxy-agent": "^5.0.1",

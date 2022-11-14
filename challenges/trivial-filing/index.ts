@@ -21,7 +21,7 @@ export const solver = async (
   await writeFiles(data.files);
   await sendFilesToServer(data.files);
   const message = {
-    tftp_host: "0.0.0.0",
+    tftp_host: process.env.PUBLIC_IP,
     tftp_port: PORT
   };
   const result = await sendOutput(submissionUrl, message);

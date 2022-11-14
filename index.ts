@@ -1,8 +1,9 @@
+import * as dotenv from "dotenv";
 import path from "path";
 import debug from "debug";
 
 const logger = debug("hackattic:root");
-
+dotenv.config();
 const challengeName = String(process.argv[2]);
 const challengeInputUrl = String(process.argv[3]);
 const challengeSubmitUrl = String(process.argv[4]);
