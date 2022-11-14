@@ -9,12 +9,12 @@ const logger = debug("hackattic:trivial-filing");
 const HOST = "0.0.0.0";
 const PORT = 6969;
 const DATA_DIR = path.join(__dirname, "data");
+initServer(HOST, PORT);
 
 export const solver = async (
   problemUrl: string,
   submissionUrl: string
 ): Promise<void> => {
-  initServer(HOST, PORT);
   const data: IData | null = await fetchInput(problemUrl);
   if (data === null) return;
   logger("%O", data.files);
@@ -22,16 +22,11 @@ export const solver = async (
     tftp_host: process.env.PUBLIC_IP,
     tftp_port: PORT
   };
-  const resultPromise = sendOutput(submissionUrl, message);
-  const writeFilePromise = writeFiles(data.files);
 
-  const promiseResults = await Promise.allSettled([
-    resultPromise,
-    writeFilePromise
-  ]);
-  logger("%O", promiseResults);
-  // const result = await sendOutput(submissionUrl, message);
-  // logger(`Result = ${result}`);
+  await writeFiles(data.files);
+
+  const result = await sendOutput(submissionUrl, message);
+  logger(`Result = ${result}`);
 };
 
 const writeFiles = async (files: IFile) => {
