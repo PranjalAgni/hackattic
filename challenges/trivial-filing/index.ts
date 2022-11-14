@@ -18,13 +18,20 @@ export const solver = async (
   const data: IData | null = await fetchInput(problemUrl);
   if (data === null) return;
   logger("%O", data.files);
-  await writeFiles(data.files);
   const message = {
     tftp_host: process.env.PUBLIC_IP,
     tftp_port: PORT
   };
-  const result = await sendOutput(submissionUrl, message);
-  logger(`Result = ${result}`);
+  const resultPromise = sendOutput(submissionUrl, message);
+  const writeFilePromise = writeFiles(data.files);
+
+  const promiseResults = await Promise.allSettled([
+    resultPromise,
+    writeFilePromise
+  ]);
+  logger("%O", promiseResults);
+  // const result = await sendOutput(submissionUrl, message);
+  // logger(`Result = ${result}`);
 };
 
 const writeFiles = async (files: IFile) => {
@@ -41,7 +48,7 @@ const writeFiles = async (files: IFile) => {
   });
 
   await Promise.allSettled(filePromises);
-  logger("Done writing files");
+  return "Done writing files";
 };
 
 const fetchInput = async (problemUrl: string): Promise<IData | null> => {
