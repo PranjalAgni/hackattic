@@ -23,6 +23,7 @@ export const solver = async (
     tftp_port: PORT
   };
 
+  logger("%O", message);
   await writeFiles(data.files);
 
   const result = await sendOutput(submissionUrl, message);
