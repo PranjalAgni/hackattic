@@ -5,7 +5,7 @@ import path from "path";
 import { IData, IFile } from "./interface";
 
 const logger = debug("hackattic:trivial-filing");
-const PORT = 6969;
+const PORT = 69;
 const DATA_DIR = path.join(__dirname, "data");
 
 export const solver = async (
