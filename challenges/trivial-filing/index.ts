@@ -3,13 +3,10 @@ import fetch from "node-fetch";
 import fs from "fs";
 import path from "path";
 import { IData, IFile } from "./interface";
-import { initServer } from "./server";
 
 const logger = debug("hackattic:trivial-filing");
-const HOST = "0.0.0.0";
 const PORT = 6969;
 const DATA_DIR = path.join(__dirname, "data");
-initServer(HOST, PORT);
 
 export const solver = async (
   problemUrl: string,
@@ -44,7 +41,7 @@ const writeFiles = async (files: IFile) => {
   });
 
   await Promise.allSettled(filePromises);
-  return "Done writing files";
+  logger("Wrote all the files");
 };
 
 const fetchInput = async (problemUrl: string): Promise<IData | null> => {
