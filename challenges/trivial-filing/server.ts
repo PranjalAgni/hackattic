@@ -27,7 +27,7 @@ export const createAndRunTftpServer = (host: string, port: number) => {
       path.resolve(dataDirectory, req.file)
     );
 
-    res.setSize(10);
+    // res.setSize(10);
     readStream.pipe(res);
     req.on("error", function (error: { message: string }) {
       logger(
