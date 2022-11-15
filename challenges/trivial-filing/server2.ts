@@ -2,7 +2,7 @@
 import tftp from "tftp2";
 import debug from "debug";
 import path from "path";
-import fs from "fs";
+import fs from "fs/promises";
 
 const logger = debug("hackattic:trivial-filing");
 const dataDirectory = path.join(__dirname, "data");
@@ -13,7 +13,9 @@ export const createAndRunTftpServer = (host: string, port: number) => {
   server.on("get", async (req: any, send: any) => {
     const { filename } = req;
     logger("Request arrived for ", filename);
-    await send(fs.readFileSync(path.resolve(dataDirectory, filename)));
+    const data = await fs.readFile(path.resolve(dataDirectory, filename));
+    logger(`Data ${JSON.stringify(data)}`);
+    await send(data);
     logger("Sent data back");
   });
 
