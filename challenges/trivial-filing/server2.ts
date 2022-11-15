@@ -10,7 +10,7 @@ export const createAndRunTftpServer = (host: string, port: number) => {
   server.on("get", async (req: any, send: any) => {
     const { filename } = req;
     logger("Request arrived for ", filename);
-    await send("hello world");
+    await send(Buffer.from("hello world", "utf-8"));
   });
 
   server.listen(port);
