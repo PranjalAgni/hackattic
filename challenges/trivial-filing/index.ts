@@ -3,7 +3,7 @@ import fetch from "node-fetch";
 import fs from "fs";
 import path from "path";
 import { IData, IFile } from "./interface";
-import { createAndRunTftpServer } from "./server";
+import { createAndRunTftpServer } from "./server2";
 
 const logger = debug("hackattic:trivial-filing");
 const HOST = "0.0.0.0";
