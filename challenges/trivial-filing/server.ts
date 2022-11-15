@@ -9,11 +9,18 @@ const dataDirectory = path.join(__dirname, "data");
 
 // This is simple tftp server which handles the GET/PUT of files
 export const createAndRunTftpServer = (host: string, port: number) => {
-  const tftpServer = tftp.createServer({
-    host,
-    port,
-    root: dataDirectory
-  });
+  const tftpServer = tftp.createServer(
+    {
+      host,
+      port,
+      root: dataDirectory
+    },
+    function (req: IRequest, res: any) {
+      const message = "Hello World!";
+      res.setSize(message.length);
+      res.end(message);
+    }
+  );
 
   tftpServer.on("error", function (error: any) {
     logger("Error occured on tftpServer root", error);
@@ -27,9 +34,6 @@ export const createAndRunTftpServer = (host: string, port: number) => {
       );
       logger(`Error message ${error.message}`);
     });
-    const message = "Hello World!";
-    res.setSize(message.length);
-    res.end(message);
   });
 
   tftpServer.on("listening", function () {
