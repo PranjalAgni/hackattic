@@ -3,26 +3,28 @@ import fetch from "node-fetch";
 import fs from "fs";
 import path from "path";
 import { IData, IFile } from "./interface";
+import { createAndRunTftpServer } from "./server";
 
 const logger = debug("hackattic:trivial-filing");
-const PORT = 69;
+const HOST = "0.0.0.0";
+const PORT = 6969;
 const DATA_DIR = path.join(__dirname, "data");
 
 export const solver = async (
   problemUrl: string,
   submissionUrl: string
 ): Promise<void> => {
+  createAndRunTftpServer(HOST, PORT);
   const data: IData | null = await fetchInput(problemUrl);
   if (data === null) return;
   logger("%O", data.files);
+  await writeFiles(data.files);
   const message = {
     tftp_host: process.env.PUBLIC_IP,
     tftp_port: PORT
   };
 
   logger("%O", message);
-  await writeFiles(data.files);
-
   const result = await sendOutput(submissionUrl, message);
   logger(`Result = ${result}`);
 };
