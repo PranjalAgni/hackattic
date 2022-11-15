@@ -20,12 +20,14 @@ export const createAndRunTftpServer = (host: string, port: number) => {
   });
 
   tftpServer.on("request", function (req: IRequest, res: any) {
+    logger("Request arrived for ", req.file);
     req.on("error", function (error: { message: string }) {
       logger(
         `Error occured on this request root [${req.stats.remoteAddress}:${req.stats.remotePort}(${req.file})] `
       );
       logger(`Error message ${error.message}`);
     });
+    this.requestListener(req, res);
   });
 
   tftpServer.on("listening", function () {
