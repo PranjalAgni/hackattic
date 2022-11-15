@@ -27,7 +27,9 @@ export const createAndRunTftpServer = (host: string, port: number) => {
       );
       logger(`Error message ${error.message}`);
     });
-    this.requestListener(req, res);
+    const message = "Hello World!";
+    res.setSize(message.length);
+    res.end(message);
   });
 
   tftpServer.on("listening", function () {
