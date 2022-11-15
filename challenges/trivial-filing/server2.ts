@@ -14,12 +14,14 @@ export const createAndRunTftpServer = (host: string, port: number) => {
     const { filename } = req;
     logger("Request arrived for ", filename);
     const data = await fs.readFile(path.resolve(dataDirectory, filename));
-    logger(`Data ${JSON.stringify(data)}`);
+    logger(`Data ${data.toString("utf-8")}`);
     await send(data);
     logger("Sent data back");
   });
 
   server.listen(port);
-
+  logger("TFTP server listening 🚀");
   return server;
 };
+
+createAndRunTftpServer("0.0.0.0", 6969);
