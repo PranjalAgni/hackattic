@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import tftp from "tftp";
+import fs from "fs";
 import path from "path";
 import debug from "debug";
 import { IRequest } from "./interface";
@@ -22,11 +23,12 @@ export const createAndRunTftpServer = (host: string, port: number) => {
 
   tftpServer.on("request", function (req: IRequest, res: any) {
     logger("Request arrived for ", req.file);
-    const message = "Hello World!";
-    try {
-      res.setSize(message.length);
-    } catch {}
-    res.end(message);
+    const readStream = fs.createReadStream(
+      path.resolve(dataDirectory, req.file)
+    );
+
+    res.setSize(10);
+    readStream.pipe(res);
     req.on("error", function (error: { message: string }) {
       logger(
         `Error occured on this request root [${req.stats.remoteAddress}:${req.stats.remotePort}(${req.file})] `
