@@ -13,5 +13,7 @@ export const createAndRunTftpServer = (host: string, port: number) => {
     await send("hello world");
   });
 
+  server.listen(port);
+
   return server;
 };
