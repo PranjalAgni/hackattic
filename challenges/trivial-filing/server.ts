@@ -10,31 +10,32 @@ const dataDirectory = path.join(__dirname, "data");
 
 // This is simple tftp server which handles the GET/PUT of files
 export const createAndRunTftpServer = (host: string, port: number) => {
-  const tftpServer = tftp.createServer({
-    host,
-    port,
-    root: dataDirectory,
-    denyPUT: true
-  });
+  const tftpServer = tftp.createServer(
+    {
+      host,
+      port,
+      root: dataDirectory,
+      denyPUT: true
+    },
+    function (req: IRequest, res: any) {
+      req.on("error", function (error: { message: string }) {
+        logger(
+          `Error occured for the request [${req.stats.remoteAddress}:${req.stats.remotePort}(${req.file})] `
+        );
+        logger(`Error message ${error.message}`);
+      });
+      logger("Request arrived for ", req.file);
+      const readStream = fs.createReadStream(
+        path.resolve(dataDirectory, req.file)
+      );
+
+      res.setSize(10);
+      readStream.pipe(res);
+    }
+  );
 
   tftpServer.on("error", function (error: any) {
     logger("Error occured on tftpServer root", error);
-  });
-
-  tftpServer.on("request", function (req: IRequest, res: any) {
-    logger("Request arrived for ", req.file);
-    const readStream = fs.createReadStream(
-      path.resolve(dataDirectory, req.file)
-    );
-
-    // res.setSize(10);
-    readStream.pipe(res);
-    req.on("error", function (error: { message: string }) {
-      logger(
-        `Error occured on this request root [${req.stats.remoteAddress}:${req.stats.remotePort}(${req.file})] `
-      );
-      logger(`Error message ${error.message}`);
-    });
   });
 
   tftpServer.on("listening", function () {
