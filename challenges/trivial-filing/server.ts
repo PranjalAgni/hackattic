@@ -23,7 +23,7 @@ export const createAndRunTftpServer = (host: string, port: number) => {
   tftpServer.on("request", function (req: IRequest, res: any) {
     logger("Request arrived for ", req.file);
     const message = "Hello World!";
-    // res.setSize(message.length);
+    res.setSize(message.length);
     res.end(message);
     req.on("error", function (error: { message: string }) {
       logger(
