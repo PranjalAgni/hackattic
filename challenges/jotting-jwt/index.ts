@@ -12,7 +12,7 @@ export const solver = async (
   const data: IData | null = await fetchInput(problemUrl);
   if (data === null) return;
   logger("JWT secret", data.jwt_secret);
-  const appUrl = await initalizeServer(4040);
+  const appUrl = await initalizeServer(4040, data.jwt_secret);
   const message = {
     app_url: appUrl
   };
