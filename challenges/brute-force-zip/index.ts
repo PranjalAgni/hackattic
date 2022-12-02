@@ -3,22 +3,25 @@ import fetch from "node-fetch";
 import fs from "fs";
 import path from "path";
 import LineReader from "n-readlines";
-
+import unzipper from "unzipper";
 import { IData } from "./interface";
 
 const logger = debug("hackattic:brute-force-zip");
+const PASSWORD_FILE = path.join(__dirname, "rockyou.txt");
+const ZIP_PATH = path.join(__dirname, "store", "file.zip");
 
 export const solver = async (
   problemUrl: string,
   submissionUrl: string
 ): Promise<void> => {
-  const passwordList = getPasswordsList(path.join(__dirname, "rockyou.txt"));
-  logger("Total Passwords: ", passwordList.length);
   const data = await fetchInput(problemUrl);
   if (data === null) return;
   logger("Zip package: ", data.zip_url);
-  const zipPath = path.join(__dirname, "store", "file.zip");
-  await downloadFile(data.zip_url, zipPath);
+  await downloadFile(data.zip_url, ZIP_PATH);
+  const answer = await bruteForceSolver(PASSWORD_FILE, ZIP_PATH);
+  logger("Answer: ", answer);
+  const result = await sendOutput(submissionUrl, { secret: answer });
+  logger("Result: ", result);
 };
 
 const fetchInput = async (problemUrl: string): Promise<IData | null> => {
@@ -32,16 +35,31 @@ const fetchInput = async (problemUrl: string): Promise<IData | null> => {
   return null;
 };
 
-const getPasswordsList = (passwordFile: string) => {
-  const passwordList = [];
+const getZipFileInstance = async (zipPath: string) => {
+  const directory = await unzipper.Open.file(zipPath);
+  const file = directory.files.find((d) => d.path === "secret.txt");
+  return file;
+};
+
+const bruteForceSolver = async (passwordFile: string, zipPath: string) => {
+  const file = await getZipFileInstance(zipPath);
+  if (file === undefined) throw new Error("No file found");
   const lineReader = new LineReader(passwordFile);
   let line = lineReader.next();
   while (line !== null) {
-    passwordList.push(line.toString("utf-8"));
+    const password = line.toString("utf-8");
+    if (password.length >= 4 && password.length <= 6) {
+      try {
+        const content = await file.buffer(password);
+        logger("Password found: ", password);
+        return content.toString("ascii");
+      } catch {
+        logger("Cannot open via this password: ", password);
+      }
+    }
+
     line = lineReader.next();
   }
-
-  return passwordList;
 };
 
 const downloadFile = async (zipUrl: string, path: string) => {
@@ -54,19 +72,19 @@ const downloadFile = async (zipUrl: string, path: string) => {
   });
 };
 
-// const sendOutput = async (
-//   submissionUrl: string,
-//   message: unknown
-// ): Promise<string> => {
-//   const response = await fetch(submissionUrl, {
-//     method: "POST",
-//     headers: {
-//       Accept: "application.json",
-//       "Content-Type": "application/json"
-//     },
-//     body: JSON.stringify(message)
-//   });
+const sendOutput = async (
+  submissionUrl: string,
+  message: unknown
+): Promise<string> => {
+  const response = await fetch(submissionUrl, {
+    method: "POST",
+    headers: {
+      Accept: "application.json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(message)
+  });
 
-//   const res = await response.text();
-//   return res;
-// };
+  const res = await response.text();
+  return res;
+};

@@ -21,6 +21,7 @@
     "@types/n-readlines": "^1.0.3",
     "@types/node": "^18.6.1",
     "@types/node-fetch": "^2.6.2",
+    "@types/unzipper": "^0.10.5",
     "@types/ws": "^8.5.3",
     "cross-env": "^7.0.3",
     "eslint-config-prettier": "^8.5.0",
@@ -46,6 +47,7 @@
     "qrcode-reader": "^1.0.4",
     "tftp": "^0.1.2",
     "tftp2": "^0.0.1",
+    "unzipper": "^0.10.11",
     "ws": "^8.10.0"
   }
 }
