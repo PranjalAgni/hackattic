@@ -9,6 +9,7 @@ import { IData } from "./interface";
 const logger = debug("hackattic:brute-force-zip");
 const PASSWORD_FILE = path.join(__dirname, "rockyou.txt");
 const ZIP_PATH = path.join(__dirname, "store", "file.zip");
+const SECRET_FILE = path.join(__dirname, "secret.txt");
 
 export const solver = async (
   problemUrl: string,
@@ -41,25 +42,45 @@ const getZipFileInstance = async (zipPath: string) => {
   return file;
 };
 
-const bruteForceSolver = async (passwordFile: string, zipPath: string) => {
-  const file = await getZipFileInstance(zipPath);
-  if (file === undefined) throw new Error("No file found");
-  const lineReader = new LineReader(passwordFile);
+const openZipFile = (file: unzipper.File, password: string) => {
+  return new Promise((resolve, reject) => {
+    file
+      .stream(password)
+      .pipe(fs.createWriteStream(SECRET_FILE))
+      .on("error", (error) => {
+        logger("Error: ", error);
+        reject(error);
+      })
+      .on("finish", resolve);
+  });
+};
+
+const findZipPassword = async (file: unzipper.File) => {
+  const lineReader = new LineReader(PASSWORD_FILE);
   let line = lineReader.next();
   while (line !== null) {
-    const password = line.toString("utf-8");
+    const password = line.toString("utf-8").toLowerCase();
     if (password.length >= 4 && password.length <= 6) {
       try {
-        const content = await file.buffer(password);
+        await file.buffer(password);
         logger("Password found: ", password);
-        return content.toString("ascii");
+        return password;
       } catch {
         logger("Cannot open via this password: ", password);
       }
     }
-
     line = lineReader.next();
   }
+};
+
+const bruteForceSolver = async (passwordFile: string, zipPath: string) => {
+  const file = await getZipFileInstance(zipPath);
+  if (file === undefined) throw new Error("No secret.txt file found");
+  const password = await findZipPassword(file);
+  if (password === undefined) throw new Error("Password not found");
+  await openZipFile(file, password);
+  const answer = await fs.readFileSync(SECRET_FILE);
+  return answer.toString("utf8", 0, answer.length);
 };
 
 const downloadFile = async (zipUrl: string, path: string) => {
@@ -88,3 +109,7 @@ const sendOutput = async (
   const res = await response.text();
   return res;
 };
+
+process.on("unhandledRejection", function (reason) {
+  logger("Error: ", reason);
+});
