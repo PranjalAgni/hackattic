@@ -80,7 +80,10 @@ const bruteForceSolver = async (passwordFile: string, zipPath: string) => {
   if (password === undefined) throw new Error("Password not found");
   await openZipFile(file, password);
   const answer = await fs.readFileSync(SECRET_FILE);
-  return answer.toString("utf8", 0, answer.length);
+  return answer
+    .toString()
+    .replace(/\r?\n|\r/g, "")
+    .trim();
 };
 
 const downloadFile = async (zipUrl: string, path: string) => {
