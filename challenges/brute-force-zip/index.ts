@@ -21,8 +21,8 @@ export const solver = async (
   await downloadFile(data.zip_url, ZIP_PATH);
   const answer = await bruteForceSolver(PASSWORD_FILE, ZIP_PATH);
   logger("Answer: ", answer);
-  const result = await sendOutput(submissionUrl, { secret: answer });
-  logger("Result: ", result);
+  // const result = await sendOutput(submissionUrl, { secret: answer });
+  // logger("Result: ", result);
 };
 
 const fetchInput = async (problemUrl: string): Promise<IData | null> => {
